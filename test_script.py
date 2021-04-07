@@ -3,8 +3,12 @@ from suntime import Sun, SunTimeException
 
 latitude = 51.21
 longitude = 21.01
+year = 2020
+month = 5
+day = 12
+power = 1300
 
-def calculate_usage(lat, lon, y, m, d):
+def calculate_usage(lat, lon, y, m, d, power):
     """
     Calculates sunrise and sunset at specified location in specified date
     """
@@ -12,10 +16,13 @@ def calculate_usage(lat, lon, y, m, d):
     time = datetime.date(year=y, month=m, day=d)
     date_sunrise = date_sun.get_local_sunrise_time(time)
     date_sunset = date_sun.get_local_sunset_time(time)
-    return (date_sunrise, date_sunset)
+    total_hours = date_sunset - date_sunrise
+    return ((total_hours.total_seconds()) / 3600) * power
+    #return 
 
-test_sr, test_ss = calculate_usage(latitude, longitude, 2020, 5, 12)
-print(f"Sunrise at test: {test_sr.hour:02d}:{test_sr.minute:02d}, sunset at test: {test_ss.hour:02d}:{test_ss.minute:02d}")
+test_sr = calculate_usage(latitude, longitude, year, month, day, power)
+print(f"Total power used in the test location: {test_sr} kWh")
+#print(f"Sunrise at test: {test_sr.hour:02d}:{test_sr.minute:02d}, sunset at test: {test_ss.hour:02d}:{test_ss.minute:02d}")
 
 """
 CODE EXAMPLES FROM PACKAGE
