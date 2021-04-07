@@ -4,6 +4,22 @@ from suntime import Sun, SunTimeException
 latitude = 51.21
 longitude = 21.01
 
+def calculate_usage(lat, lon, y, m, d):
+    """
+    Calculates sunrise and sunset at specified location in specified date
+    """
+    date_sun = Sun(lat, lon)
+    time = datetime.date(year=y, month=m, day=d)
+    date_sunrise = date_sun.get_local_sunrise_time(time)
+    date_sunset = date_sun.get_local_sunset_time(time)
+    return (date_sunrise, date_sunset)
+
+test_sr, test_ss = calculate_usage(latitude, longitude, 2020, 5, 12)
+print(f"Sunrise at test: {test_sr.hour:02d}:{test_sr.minute:02d}, sunset at test: {test_ss.hour:02d}:{test_ss.minute:02d}")
+
+"""
+CODE EXAMPLES FROM PACKAGE
+
 sun = Sun(latitude, longitude)
 
 # Get today's sunrise and sunset in UTC
@@ -30,3 +46,4 @@ try:
           format(abd, abd_sr.strftime('%H:%M'), abd_ss.strftime('%H:%M')))
 except SunTimeException as e:
     print("Error: {0}.".format(e))
+"""
