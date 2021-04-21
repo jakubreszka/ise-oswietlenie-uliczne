@@ -1,4 +1,6 @@
 import datetime, timedelta
+import numpy as np
+import matplotlib.pyplot as plt
 from suntime import Sun, SunTimeException
 
 latitude = 51.11163
@@ -46,9 +48,7 @@ def calculate_usage_in_period(startDate, endDate, *args):
     currentMonth = startDate[0]
     currentYear = startDate[1]
     while True:
-        monthlyUsage[str(currentMonth) + "." +
-                     str(currentYear)] = calculate_monthly_usage(
-                         *args, currentYear, currentMonth)
+        monthlyUsage[f"{currentMonth}.{currentYear}"] = calculate_monthly_usage(*args, currentYear, currentMonth)
         if not (currentMonth != endDate[0] or currentYear != endDate[1]):
             break
         if currentMonth < 12:
@@ -60,14 +60,23 @@ def calculate_usage_in_period(startDate, endDate, *args):
 
 predictedUsageForPeriod = calculate_usage_in_period(startTime, endTime, latitude, longitude, power)
 print("---------------------------------------------------")
-print("Start date: " + str(startTime[0]) + "." +
-                     str(startTime[1]))
-print("End date: " + str(endTime[0]) + "." +
-                     str(endTime[1]))
+print(f"Start date: {startTime[0]}.{startTime[1]}")
+print(f"End date: {endTime[0]}.{endTime[1]}")
 for i in predictedUsageForPeriod:
-  print("Date: " + str(i) + " || Predicted power usage: " + str(predictedUsageForPeriod[i]) + " kWh")
+  print(f"Date: {i} || Predicted: {predictedUsageForPeriod[i]} kWh")
 print("---------------------------------------------------")
 
+x = np.arange(len(predictedUsageForPeriod))
+fig, ax = plt.subplots(figsize=(12,6))
+bar = ax.bar(x, predictedUsageForPeriod.values())
+ax.set_xlabel("Dates")
+ax.set_xticks(x)
+ax.set_xticklabels(predictedUsageForPeriod.keys())
+ax.set_ylabel("Energy usage [kWh]")
+plt.show()
+
+
+#DEPRECATED FUNCTIONS
 def calculate_daily_usage(lat, lon, power, y, m, d):
   """
   Calculates sunrise and sunset at specified location in specified date
@@ -78,6 +87,3 @@ def calculate_daily_usage(lat, lon, power, y, m, d):
   date_sunset = date_sun.get_local_sunset_time(time)
   total_hours = date_sunset - date_sunrise
   return ((total_hours.total_seconds()) / 3600) * power
-
-#print(calculate_daily_usage(latitude, longitude, power, 2020, 1, 3))
-#print(calculate_daily_usage(latitude, longitude, power, 2020, 7, 1))
