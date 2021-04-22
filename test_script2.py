@@ -5,7 +5,7 @@ from suntime import Sun, SunTimeException
 
 latitude = 51.11163
 longitude = 17.05367
-power = 50
+power = 55
 startTime = [1, 2020]
 endTime = [12, 2020]
 
